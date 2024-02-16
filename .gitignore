@@ -1,0 +1,11 @@
+node_modules
+dist
+out
+.DS_Store
+*.log*
+src/main/drive/credentials.json
+src/main/drive/token.json
+.vscode/
+credentials.json
+build/
+token.json
