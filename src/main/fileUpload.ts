@@ -5,10 +5,19 @@ interface FileDialogResult {
   filePaths: string[],
   canceled: boolean;
 }
-export async function run(folderPath: FileDialogResult) {
+
+function getFolderName(filepath) {
+  const parts = filepath.split("/");
+
+  return parts[parts.length - 1];
+}
+
+
+export async function run(folderPath: FileDialogResult): Promise<void> {
   fs.readdir(folderPath.filePaths[0], (err, files) => {
-    files.forEach(file => {
-      handleFileUpload(folderPath.filePaths[0], file);
+    const folderName = getFolderName(folderPath.filePaths[0])
+    files.forEach((file) => {
+      handleFileUpload(folderPath.filePaths[0], file, folderName);
     })
   });
 }

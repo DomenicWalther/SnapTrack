@@ -69,30 +69,52 @@ async function authorize() {
  * Lists the names and IDs of up to 10 files.
  * @param {OAuth2Client} authClient An authorized OAuth2 client.
  */
-async function listFiles(authClient) {
+async function createFolder(authClient, folderName) {
   const drive = google.drive({ version: 'v3', auth: authClient })
-  const res = await drive.files.list({
-    pageSize: 10,
-    fields: 'nextPageToken, files(id, name)'
-  })
-  const files = res.data.files
-  if (files.length === 0) {
-    console.log('No files found.')
-    return
-  }
 
-  console.log('Files:')
-  files.map((file) => {
-    console.log(`${file.name} (${file.id})`)
-  })
+  const fileMetadata = {
+    name: folderName,
+    mimeType: 'application/vnd.google-apps.folder',
+  };
+
+  try {
+    const file = await drive.files.create({
+      resource: fileMetadata,
+      fields: 'id',
+    });
+    console.log("Folder ID:", file.data.id);
+    return file.data.id;
+  } catch (err) {
+    console.log(err)
+  }
 }
 
-async function uploadBasic(authClient, filePath, file) {
+
+async function shareFolder(authClient, folderID) {
   const drive = google.drive({ version: 'v3', auth: authClient })
+  const permissions = { type: 'anyone', role: 'reader' }
+
+
+  try {
+    const result = await drive.permissions.create({
+      resource: permissions,
+      fileId: folderID,
+      fields: 'id',
+    });
+    console.log("Inserted permission id:", result.data.id);
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+
+async function uploadBasic(authClient, filePath, file, folderID) {
+  const drive = google.drive({ version: 'v3', auth: authClient })
+  console.log(folderID);
 
   const requestBody = {
     name: file,
-    fields: 'id'
+    parents: [folderID],
   }
 
   const media = {
@@ -103,7 +125,8 @@ async function uploadBasic(authClient, filePath, file) {
   try {
     const file = await drive.files.create({
       requestBody,
-      media: media
+      media: media,
+      id: 'id',
     })
     console.log('File ID:', file.data.id)
     return file.data.id
@@ -112,6 +135,11 @@ async function uploadBasic(authClient, filePath, file) {
   }
 }
 
-export async function handleFileUpload(filePath, file) {
-  authorize().then((authClient) => { uploadBasic(authClient, filePath, file) }).catch(console.error)
+export async function handleFileUpload(filePath, file, folder) {
+  authorize().then((authClient) => { return createFolder(authClient, folder) }).then((folderID) => { startUpload(filePath, file, folderID) }).catch(console.error)
+}
+
+async function startUpload(filePath, file, folderID) {
+  authorize().then((authClient) => { uploadBasic(authClient, filePath, file, folderID) }).catch(console.error)
+  authorize().then((authClient) => { shareFolder(authClient, folderID) }).catch(console.error);
 }
