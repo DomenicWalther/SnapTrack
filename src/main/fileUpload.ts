@@ -1,4 +1,4 @@
-const fs = require('fs');
+import { promises as fs } from 'fs';
 import { handleFileUpload } from "./drive/gdrive.js";
 
 interface FileDialogResult {
@@ -13,11 +13,22 @@ function getFolderName(filepath) {
 }
 
 
-export async function run(folderPath: FileDialogResult): Promise<void> {
-  fs.readdir(folderPath.filePaths[0], (err, files) => {
-    const folderName = getFolderName(folderPath.filePaths[0])
-    files.forEach((file) => {
-      handleFileUpload(folderPath.filePaths[0], file, folderName);
-    })
-  });
+
+
+export async function run(folderPath) {
+  try {
+    const files = await fs.readdir(folderPath.filePaths[0]);
+    const folderName = getFolderName(folderPath.filePaths[0]);
+    const uploadResults = new Map();
+    console.log("Files: ", files);
+    for (const file of files) {
+      const result = await handleFileUpload(folderPath.filePaths[0], file, folderName);
+      uploadResults.set(folderName, result)
+    }
+
+    console.log("Upload completed successfully");
+    console.log("Result:", uploadResults);
+  } catch (err) {
+    console.log(err);
+  }
 }

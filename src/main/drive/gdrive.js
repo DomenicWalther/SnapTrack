@@ -135,11 +135,17 @@ async function uploadBasic(authClient, filePath, file, folderID) {
   }
 }
 
-export async function handleFileUpload(filePath, file, folder) {
-  authorize().then((authClient) => { return createFolder(authClient, folder) }).then((folderID) => { startUpload(filePath, file, folderID) }).catch(console.error)
-}
 
-async function startUpload(filePath, file, folderID) {
-  authorize().then((authClient) => { uploadBasic(authClient, filePath, file, folderID) }).catch(console.error)
-  authorize().then((authClient) => { shareFolder(authClient, folderID) }).catch(console.error);
+
+export async function handleFileUpload(filePath, file, folder) {
+  try {
+    const authClient = await authorize();
+    const folderID = await createFolder(authClient, folder);
+    await uploadBasic(authClient, filePath, file, folderID);
+    await shareFolder(authClient, folderID);
+    return folderID;
+  } catch (error) {
+    console.log(error);
+  }
+
 }
