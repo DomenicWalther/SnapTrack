@@ -6,7 +6,7 @@ interface FileDialogResult {
   canceled: boolean;
 }
 
-function getFolderName(filepath) {
+function getFolderName(filepath: String) {
   const parts = filepath.split("/");
 
   return parts[parts.length - 1];
@@ -14,20 +14,16 @@ function getFolderName(filepath) {
 
 
 
-
-export async function run(folderPath) {
+export async function run(folderPath: FileDialogResult) {
   try {
     const files = await fs.readdir(folderPath.filePaths[0]);
     const folderName = getFolderName(folderPath.filePaths[0]);
     const uploadResults = new Map();
-    console.log("Files: ", files);
     for (const file of files) {
       const result = await handleFileUpload(folderPath.filePaths[0], file, folderName);
       uploadResults.set(folderName, result)
     }
 
-    console.log("Upload completed successfully");
-    console.log("Result:", uploadResults);
   } catch (err) {
     console.log(err);
   }
