@@ -9,3 +9,4 @@ src/main/drive/token.json
 credentials.json
 build/
 token.json
+.env
