@@ -2,7 +2,8 @@ import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import {run} from './fileUpload'
+import { run } from './fileUpload'
+import { main } from "./mailer"
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -56,10 +57,10 @@ app.whenReady().then(() => {
 
   // IPC test
   ipcMain.on('ping', () => get_files())
-
+  ipcMain.on('sendMail', () => main());
   createWindow()
 
-  app.on('activate', function () {
+  app.on('activate', function() {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow()

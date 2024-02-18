@@ -3,6 +3,7 @@
   import electronLogo from './assets/electron.svg'
 
   const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
+  const sendMail = (): void => window.electron.ipcRenderer.send('sendMail')
 </script>
 
 <img alt="logo" class="logo" src={electronLogo} />
@@ -21,6 +22,7 @@
   <div class="action">
     <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions a11y-missing-attribute-->
     <a target="_blank" rel="noreferrer" on:click={ipcHandle}>Send IPC</a>
+    <a target="_blank" rel="noreferrer" on:click={sendMail}>Send Testmail</a>
   </div>
 </div>
 <Versions />
