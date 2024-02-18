@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs';
 import { handleFileUpload } from "./drive/gdrive.js";
-
+import { main } from "./mailer"
 interface FileDialogResult {
   filePaths: string[],
   canceled: boolean;
@@ -23,7 +23,9 @@ export async function run(folderPath: FileDialogResult) {
       const result = await handleFileUpload(folderPath.filePaths[0], file, folderName);
       uploadResults.set(folderName, result)
     }
-
+    console.log(uploadResults)
+    let downloadLink = `https://drive.google.com/drive/folders/${uploadResults.get(folderName)}`;
+    main(downloadLink);
   } catch (err) {
     console.log(err);
   }

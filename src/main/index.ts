@@ -3,7 +3,7 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { run } from './fileUpload'
-import { main } from "./mailer"
+import { getSettings } from "./settings"
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -47,7 +47,6 @@ async function get_files(): Promise<void> {
 app.whenReady().then(() => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
-
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
   // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
@@ -57,7 +56,7 @@ app.whenReady().then(() => {
 
   // IPC test
   ipcMain.on('ping', () => get_files())
-  ipcMain.on('sendMail', () => main());
+  // ipcMain.on('ping', () => getSettings());
   createWindow()
 
   app.on('activate', function() {

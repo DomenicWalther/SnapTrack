@@ -1,28 +1,30 @@
 <script lang="ts">
-  import Versions from './components/Versions.svelte'
-  import electronLogo from './assets/electron.svg'
+  import SettingsIcon from './components/svg/SettingsIcon.svelte'
+
+  import Modal from './components/Modal.svelte'
+  let showModal = false
+  function toggleModal() {
+    console.log('toggleModal')
+    showModal = !showModal
+  }
 
   const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
   const sendMail = (): void => window.electron.ipcRenderer.send('sendMail')
 </script>
 
-<img alt="logo" class="logo" src={electronLogo} />
-<div class="creator">Powered by electron-vite</div>
-<div class="text">
-  Build an Electron app with
-  <span class="svelte">Svelte</span>
-  and
-  <span class="ts">TypeScript</span>
-</div>
-<p class="tip">Please try pressing <code>F12</code> to open the devTool</p>
 <div class="actions">
-  <div class="action">
-    <a href="https://electron-vite.org/" target="_blank" rel="noreferrer">Documentation</a>
-  </div>
   <div class="action">
     <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions a11y-missing-attribute-->
     <a target="_blank" rel="noreferrer" on:click={ipcHandle}>Send IPC</a>
+    <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions a11y-missing-attribute-->
     <a target="_blank" rel="noreferrer" on:click={sendMail}>Send Testmail</a>
   </div>
 </div>
-<Versions />
+
+<Modal isOpen={showModal} close={toggleModal}>
+  <h1>Settings</h1>
+  <p>Here are some settings</p>
+</Modal>
+<div class="settings">
+  <button class="settings-button" on:click={toggleModal}><SettingsIcon /></button>
+</div>
