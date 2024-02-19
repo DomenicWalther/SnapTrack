@@ -16,16 +16,17 @@ function getFolderName(filepath: String) {
 
 export async function run(folderPath: FileDialogResult) {
   try {
-    const files = await fs.readdir(folderPath.filePaths[0]);
-    const folderName = getFolderName(folderPath.filePaths[0]);
-    const uploadResults = new Map();
-    for (const file of files) {
-      const result = await handleFileUpload(folderPath.filePaths[0], file, folderName);
+    for (const path of folderPath.filePaths) {
+      const uploadResults = new Map();
+      const files = await fs.readdir(path);
+      const folderName = getFolderName(path);
+      const result = await handleFileUpload(path, files, folderName);
       uploadResults.set(folderName, result)
+      let downloadLink = `https://drive.google.com/drive/folders/${uploadResults.get(folderName)}`;
+      console.log("Folder: " + folderName);
+      main(downloadLink, folderName);
     }
-    console.log(uploadResults)
-    let downloadLink = `https://drive.google.com/drive/folders/${uploadResults.get(folderName)}`;
-    main(downloadLink);
+    console.log("Upload complete")
   } catch (err) {
     console.log(err);
   }

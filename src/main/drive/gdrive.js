@@ -110,7 +110,6 @@ async function shareFolder(authClient, folderID) {
 
 async function uploadBasic(authClient, filePath, file, folderID) {
   const drive = google.drive({ version: 'v3', auth: authClient })
-  console.log(folderID);
 
   const requestBody = {
     name: file,
@@ -128,7 +127,6 @@ async function uploadBasic(authClient, filePath, file, folderID) {
       media: media,
       id: 'id',
     })
-    console.log('File ID:', file.data.id)
     return file.data.id
   } catch (err) {
     console.log('Error uploading file:', err)
@@ -137,11 +135,13 @@ async function uploadBasic(authClient, filePath, file, folderID) {
 
 
 
-export async function handleFileUpload(filePath, file, folder) {
+export async function handleFileUpload(filePath, files, folder) {
   try {
     const authClient = await authorize();
     const folderID = await createFolder(authClient, folder);
-    await uploadBasic(authClient, filePath, file, folderID);
+    for (const file of files) {
+      await uploadBasic(authClient, filePath, file, folderID);
+    }
     await shareFolder(authClient, folderID);
     return folderID;
   } catch (error) {

@@ -13,15 +13,16 @@ let transporter = nodemailer.createTransport({
 })
 
 
-export async function main(downloadLink: string) {
-  const info = await transporter.sendMail(createMessage(downloadLink))
-  console.log(info.messageId)
+export async function main(downloadLink: string, emailReceiver: string) {
+  console.log("Receiver: " + emailReceiver)
+  const info = await transporter.sendMail(createMessage(downloadLink, emailReceiver))
+  console.log(info)
 }
 
-function createMessage(downloadLink: string) {
+function createMessage(downloadLink: string, emailReceiver: string) {
   return {
     from: process.env.EMAIL_TESTSENDER,
-    to: process.env.EMAIL_TESTRECEIVER,
+    to: emailReceiver,
     subject: 'Kindergarten Downloadlink',
     text: 'Anbei der Downloadlink für die Kindergartenbilder' + downloadLink,
     html: '<p>Anbei der Downloadlink für die Kindergartenbilder</p>' + downloadLink
