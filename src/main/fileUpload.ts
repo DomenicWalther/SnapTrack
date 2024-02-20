@@ -7,7 +7,7 @@ interface FileDialogResult {
 }
 
 function getFolderName(filepath: String) {
-  const parts = filepath.split("/");
+  const parts = filepath.split(/[\\/]/);
 
   return parts[parts.length - 1];
 }

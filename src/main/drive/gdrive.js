@@ -21,6 +21,7 @@ async function loadSavedCredentialsIfExist() {
   try {
     const content = await fs.promises.readFile(TOKEN_PATH)
     const credentials = JSON.parse(content)
+    console.log(credentials)
     return google.auth.fromJSON(credentials)
   } catch (err) {
     return null
@@ -74,58 +75,55 @@ async function createFolder(authClient, folderName) {
 
   const fileMetadata = {
     name: folderName,
-    mimeType: 'application/vnd.google-apps.folder',
-  };
+    mimeType: 'application/vnd.google-apps.folder'
+  }
 
   try {
     const file = await drive.files.create({
       resource: fileMetadata,
-      fields: 'id',
-    });
-    console.log("Folder ID:", file.data.id);
-    return file.data.id;
+      fields: 'id'
+    })
+    console.log('Folder ID:', file.data.id)
+    return file.data.id
   } catch (err) {
     console.log(err)
   }
 }
 
-
 async function shareFolder(authClient, folderID) {
   const drive = google.drive({ version: 'v3', auth: authClient })
   const permissions = { type: 'anyone', role: 'reader' }
-
 
   try {
     const result = await drive.permissions.create({
       resource: permissions,
       fileId: folderID,
-      fields: 'id',
-    });
-    console.log("Inserted permission id:", result.data.id);
+      fields: 'id'
+    })
+    console.log('Inserted permission id:', result.data.id)
   } catch (err) {
-    console.log(err);
+    console.log(err)
   }
 }
-
 
 async function uploadBasic(authClient, filePath, file, folderID) {
   const drive = google.drive({ version: 'v3', auth: authClient })
 
   const requestBody = {
     name: file,
-    parents: [folderID],
+    parents: [folderID]
   }
 
   const media = {
     mimeType: 'image/jpeg',
-    body: fs.createReadStream(filePath + "/" + file)
+    body: fs.createReadStream(filePath + '/' + file)
   }
 
   try {
     const file = await drive.files.create({
       requestBody,
       media: media,
-      id: 'id',
+      id: 'id'
     })
     return file.data.id
   } catch (err) {
@@ -133,19 +131,17 @@ async function uploadBasic(authClient, filePath, file, folderID) {
   }
 }
 
-
-
 export async function handleFileUpload(filePath, files, folder) {
   try {
-    const authClient = await authorize();
-    const folderID = await createFolder(authClient, folder);
+    const authClient = await authorize()
+    const folderID = await createFolder(authClient, folder)
+    console.log('Files: ', files)
     for (const file of files) {
-      await uploadBasic(authClient, filePath, file, folderID);
+      await uploadBasic(authClient, filePath, file, folderID)
     }
-    await shareFolder(authClient, folderID);
-    return folderID;
+    await shareFolder(authClient, folderID)
+    return folderID
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-
 }
