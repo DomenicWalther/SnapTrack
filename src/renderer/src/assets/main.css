@@ -5,20 +5,20 @@ body {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background-image: url('./wavy-lines.svg');
-  background-size: cover;
   user-select: none;
 }
-
 .settings-button {
   background: none;
   border: none;
   position: absolute;
+  cursor: pointer;
 }
 .action a {
-  padding: 20px;
-  background: black;
+  padding: 20px 30px;
+  background: white;
+  color: black;
   border-radius: 10px;
+  cursor: pointer;
 }
 .settings {
   position: absolute;

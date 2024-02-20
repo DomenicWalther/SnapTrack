@@ -1,12 +1,19 @@
 import storage from 'electron-json-storage';
+import { promisify } from 'util';
 
 
-export function getSettings() {
-  const dataPath = storage.getDataPath();
-  console.log(dataPath);
-  storage.set('settings', { name: 'Electron', type: 'app' })
-  storage.getAll(function(error: any, data: any) {
-    if (error) throw error;
+export function setSettings(key, options) {
+  storage.set(key, options);
+}
+
+const storageGetAsync = promisify(storage.get);
+
+export async function getSettings(key) {
+  try {
+    const data = await storageGetAsync(key);
     console.log(data);
-  });
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
 }

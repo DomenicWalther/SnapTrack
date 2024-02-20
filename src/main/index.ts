@@ -3,7 +3,7 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { run } from './fileUpload'
-import { getSettings } from "./settings"
+import { setSettings } from "./settings"
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -56,7 +56,9 @@ app.whenReady().then(() => {
 
   // IPC test
   ipcMain.on('ping', () => get_files())
-  // ipcMain.on('ping', () => getSettings());
+  ipcMain.on('save-settings', (event, args) => {
+    setSettings("anmeldedaten", args);
+  })
   createWindow()
 
   app.on('activate', function() {

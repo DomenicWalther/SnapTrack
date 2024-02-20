@@ -1,20 +1,30 @@
 import nodemailer from 'nodemailer'
+import { getSettings } from "./settings"
 import 'dotenv/config'
 
-let transporter = nodemailer.createTransport({
-  host: 'securesmtp.t-online.de',
-  port: 465,
-  secure: true,
-  pool: true,
-  auth: {
-    user: process.env.EMAIL_USERNAME,
-    pass: process.env.EMAIL_PASSWORD
+
+
+
+async function setMailSettings() {
+  try {
+    let userSettings = await getSettings("anmeldedaten")
+    let transporter = nodemailer.createTransport({
+      host: 'securesmtp.t-online.de',
+      port: 465,
+      secure: true,
+      pool: true,
+      auth: {
+        user: userSettings.emailAdress,
+        pass: userSettings.password
+      }
+    })
+    return transporter
+  } catch (error) {
+    console.error(error)
   }
-})
-
-
+}
 export async function main(downloadLink: string, emailReceiver: string) {
-  console.log("Receiver: " + emailReceiver)
+  let transporter = await setMailSettings()
   const info = await transporter.sendMail(createMessage(downloadLink, emailReceiver))
   console.log(info)
 }
