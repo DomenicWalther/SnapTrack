@@ -13,7 +13,7 @@
   <div class="backdrop" on:click={handleBackdropClick}>
     <div class="modal">
       <slot />
-      <button on:click={close}>Close</button>
+      <button on:click={close}>Schließen</button>
     </div>
   </div>
 {/if}
