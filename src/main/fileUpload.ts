@@ -23,6 +23,7 @@ export async function run(folderPath: FileDialogResult) {
       const files = await fs.readdir(path);
       const folderName = getFolderName(path);
       log.info("Folder: " + folderName);
+      log.info("Files: " + files)
       const result = await handleFileUpload(path, files, folderName);
       log.info(result);
       uploadResults.set(folderName, result)
