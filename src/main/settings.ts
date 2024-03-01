@@ -11,7 +11,6 @@ const storageGetAsync = promisify(storage.get);
 export async function getSettings(key) {
   try {
     const data = await storageGetAsync(key);
-    console.log(data);
     return data;
   } catch (error) {
     console.error(error);
