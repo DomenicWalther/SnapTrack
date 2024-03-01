@@ -1,5 +1,6 @@
 <script lang="ts">
   import SettingsIcon from './components/svg/SettingsIcon.svelte'
+  import toast, { Toaster } from 'svelte-french-toast'
 
   import Modal from './components/Modal.svelte'
   let showModal = false
@@ -14,9 +15,11 @@
   const saveSettings = () => {
     window.electron.ipcRenderer.send('save-settings', { emailAdress, password })
     toggleModal()
+    toast.success('Einstellungen gespeichert!')
   }
 </script>
 
+<Toaster />
 <div class="actions">
   <div class="action">
     <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions a11y-missing-attribute-->
