@@ -18,20 +18,19 @@ async function setMailSettings() {
         pass: userSettings.password
       }
     })
-    return transporter
+    return { transporter: transporter, emailSender: userSettings.emailAdress }
   } catch (error) {
-    console.error(error)
+    throw (error)
   }
 }
 export async function main(downloadLink: string, emailReceiver: string) {
-  let transporter = await setMailSettings()
-  const info = await transporter.sendMail(createMessage(downloadLink, emailReceiver))
-  console.log(info)
+  let { transporter, emailSender } = await setMailSettings()
+  await transporter.sendMail(createMessage(downloadLink, emailReceiver, emailSender))
 }
 
-function createMessage(downloadLink: string, emailReceiver: string) {
+function createMessage(downloadLink: string, emailReceiver: string, emailSender: string) {
   return {
-    from: process.env.EMAIL_TESTSENDER,
+    from: emailSender,
     to: emailReceiver,
     subject: 'Kindergarten Downloadlink',
     text: 'Anbei der Downloadlink für die Kindergartenbilder' + downloadLink,
