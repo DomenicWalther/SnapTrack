@@ -20,7 +20,21 @@
   }
 
   window.electronAPI.onfolderProcessed((value) => {
-    toast.success('Kindergarten verschickt!\n' + value)
+    toast.success('Kindergarten verschickt!\n' + value, {
+      duration: 6000
+    })
+  })
+
+  window.electronAPI.onMailSent((value) => {
+    toast.success('E-Mail verschickt!\n' + value, {
+      duration: 6000
+    })
+  })
+
+  window.electronAPI.onMailError((value) => {
+    toast.error('E-Mail konnte nicht verschickt werden!\n' + value, {
+      duration: 6000
+    })
   })
 </script>
 

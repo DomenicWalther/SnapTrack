@@ -23,9 +23,15 @@ async function setMailSettings() {
     throw (error)
   }
 }
-export async function main(downloadLink: string, emailReceiver: string) {
+export async function main(downloadLink: string, emailReceiver: string, mainWindow: Electron.BrowserWindow) {
   let { transporter, emailSender } = await setMailSettings()
-  await transporter.sendMail(createMessage(downloadLink, emailReceiver, emailSender))
+  transporter.sendMail(createMessage(downloadLink, emailReceiver, emailSender), function(error, info) {
+    if (error) {
+      mainWindow.webContents.send('mail-error', error)
+    } else {
+      mainWindow.webContents.send('mail-sent', info.response)
+    }
+  })
 }
 
 function createMessage(downloadLink: string, emailReceiver: string, emailSender: string) {

@@ -12,7 +12,13 @@ if (process.contextIsolated) {
     contextBridge.exposeInMainWorld('electron', electronAPI)
     contextBridge.exposeInMainWorld('api', api)
     contextBridge.exposeInMainWorld('electronAPI', {
-      onfolderProcessed: (callback) => ipcRenderer.on('folder-processed', (_event, value) => callback(value))
+      onfolderProcessed: (callback) => ipcRenderer.on('folder-processed', (_event, value) => callback(value)),
+      onMailError: (callback) => ipcRenderer.on('mail-error', (_event, value) => callback(value)),
+      onMailSent: (callback) => ipcRenderer.on('mail-sent', (_event, value) => callback(value))
+    })
+    contextBridge.exposeInMainWorld('electronAPI', {
+    })
+    contextBridge.exposeInMainWorld('electronAPI', {
     })
   } catch (error) {
     console.error(error)

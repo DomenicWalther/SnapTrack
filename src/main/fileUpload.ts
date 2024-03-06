@@ -44,7 +44,7 @@ async function processFolderPath(folderPath, mainWindow: BrowserWindow) {
     const uploadResultsMap = new Map().set(folderName, uploadResult);
     const downloadLink = `https://drive.google.com/drive/folders/${uploadResultsMap.get(folderName)}`;
 
-    main(downloadLink, folderName);
+    main(downloadLink, folderName, mainWindow);
     mainWindow.webContents.send('folder-processed', getFolderName(folderName));
   } catch (error) {
     log.error(`Error processing folder '${folderPath}': `, error);
