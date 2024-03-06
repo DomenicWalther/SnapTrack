@@ -60,7 +60,7 @@ app.whenReady().then(() => {
   let mainWindow = createWindow()
   // IPC test
   ipcMain.on('ping', () => get_files(mainWindow))
-  ipcMain.on('save-settings', (event, args) => {
+  ipcMain.on('save-settings', (_event, args) => {
     setSettings("anmeldedaten", args);
   })
 
