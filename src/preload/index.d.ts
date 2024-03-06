@@ -3,6 +3,10 @@ export interface IElectronAPI {
   onfolderProcessed(callback: (value: string) => void): void
   onMailSent(callback: (value: string) => void): void
   onMailError(callback: (value: string) => void): void
+  onSetUploading(callback: (value: boolean) => void): void
+  onFolderAmount(callback: (value: number) => void): void
+  onFileAmount(callback: (value: number) => void): void
+  onFileProcessed(callback: (value: string) => void): void
 }
 
 declare global {

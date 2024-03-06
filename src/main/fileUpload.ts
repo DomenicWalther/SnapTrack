@@ -19,12 +19,14 @@ function getFolderName(filepath: String) {
 
 
 export async function run(folderPathResult: FileDialogResult, mainWindow: BrowserWindow) {
+  mainWindow.webContents.send('set-uploading', true);
+  mainWindow.webContents.send('folder-amount', folderPathResult.filePaths.length);
   try {
     for (const folderPath of folderPathResult.filePaths) {
-      console.log("Path: ", folderPath);
       await processFolderPath(folderPath, mainWindow);
     }
     log.info("Upload complete");
+    mainWindow.webContents.send('set-uploading', false);
   } catch (error) {
     log.error("Failed to process folder paths: ", error);
   }
@@ -38,7 +40,8 @@ async function processFolderPath(folderPath, mainWindow: BrowserWindow) {
     const files = await fs.readdir(folderPath);
     log.info(`Files: ${files}`);
 
-    const uploadResult = await handleFileUpload(folderPath, files, folderName);
+    mainWindow.webContents.send('file-amount', files.length);
+    const uploadResult = await handleFileUpload(folderPath, files, folderName, mainWindow);
     log.info(uploadResult);
 
     const uploadResultsMap = new Map().set(folderName, uploadResult);

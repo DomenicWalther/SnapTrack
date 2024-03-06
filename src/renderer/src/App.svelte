@@ -9,7 +9,11 @@
   }
 
   const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
-  const ordner = ['Ordner 1', 'Ordner 2', 'Ordner 3', 'Ordner 4', 'Ordner 5']
+  let uploading: boolean = false
+  let folderAmount: number = 0
+  let folderProcessed: number = 0
+  let fileAmount: number = 0
+  let fileProcessed: number = 0
 
   let emailAdress: String = ''
   let password: String = ''
@@ -36,6 +40,22 @@
       duration: 6000
     })
   })
+
+  window.electronAPI.onSetUploading((value) => {
+    uploading = value
+  })
+
+  window.electronAPI.onFolderAmount((value) => {
+    folderAmount = value
+  })
+
+  window.electronAPI.onFileAmount((value) => {
+    fileAmount = value
+  })
+
+  window.electronAPI.onFileProcessed((value) => {
+    fileProcessed += 1
+  })
 </script>
 
 <Toaster />
@@ -56,11 +76,13 @@
 <div class="settings">
   <button class="settings-button" on:click={toggleModal}><SettingsIcon /></button>
 </div>
-<div class="upload-status">
-  <p>Upload Status</p>
-  <p>Ordner hochgeladen: 1/{ordner.length}</p>
-  <p>Dateien hochgeladen: 1/5</p>
-</div>
+{#if uploading}
+  <div class="upload-status">
+    <p>Upload Status</p>
+    <p>Ordner hochgeladen: {folderProcessed}/{folderAmount}</p>
+    <p>Dateien hochgeladen: {fileProcessed}/{fileAmount}</p>
+  </div>
+{/if}
 
 <style lang="scss">
   .upload-status {

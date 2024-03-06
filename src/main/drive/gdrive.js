@@ -131,12 +131,13 @@ async function uploadBasic(authClient, filePath, file, folderID) {
   }
 }
 
-export async function handleFileUpload(filePath, files, folder) {
+export async function handleFileUpload(filePath, files, folder, mainWindow) {
   try {
     const authClient = await authorize()
     const folderID = await createFolder(authClient, folder)
     for (const file of files) {
       await uploadBasic(authClient, filePath, file, folderID)
+      mainWindow.webContents.send('file-processed', file)
     }
     await shareFolder(authClient, folderID)
     return folderID
