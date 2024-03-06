@@ -16,10 +16,6 @@ if (process.contextIsolated) {
       onMailError: (callback) => ipcRenderer.on('mail-error', (_event, value) => callback(value)),
       onMailSent: (callback) => ipcRenderer.on('mail-sent', (_event, value) => callback(value))
     })
-    contextBridge.exposeInMainWorld('electronAPI', {
-    })
-    contextBridge.exposeInMainWorld('electronAPI', {
-    })
   } catch (error) {
     console.error(error)
   }
