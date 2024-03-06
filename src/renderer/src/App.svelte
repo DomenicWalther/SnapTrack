@@ -23,16 +23,12 @@
     toast.success('Einstellungen gespeichert!')
   }
 
-  window.electronAPI.onfolderProcessed((value) => {
-    toast.success('Kindergarten verschickt!\n' + value, {
-      duration: 6000
-    })
+  window.electronAPI.onFolderUpload((value) => {
+    toast.success('Bilder erfolgreich hochgeladen\n' + value)
   })
 
   window.electronAPI.onMailSent((value) => {
-    toast.success('E-Mail verschickt!\n' + value, {
-      duration: 6000
-    })
+    toast.success('E-Mail verschickt!\n' + value)
   })
 
   window.electronAPI.onMailError((value) => {
@@ -46,15 +42,21 @@
   })
 
   window.electronAPI.onFolderAmount((value) => {
+    folderProcessed = 0
     folderAmount = value
   })
 
   window.electronAPI.onFileAmount((value) => {
+    fileProcessed = 0
     fileAmount = value
   })
 
-  window.electronAPI.onFileProcessed((value) => {
+  window.electronAPI.onFileProcessed(() => {
     fileProcessed += 1
+  })
+
+  window.electronAPI.onFolderProcessed(() => {
+    folderProcessed += 1
   })
 </script>
 

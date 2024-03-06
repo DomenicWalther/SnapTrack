@@ -24,6 +24,7 @@ export async function run(folderPathResult: FileDialogResult, mainWindow: Browse
   try {
     for (const folderPath of folderPathResult.filePaths) {
       await processFolderPath(folderPath, mainWindow);
+      mainWindow.webContents.send('folder-processed');
     }
     log.info("Upload complete");
     mainWindow.webContents.send('set-uploading', false);
@@ -48,7 +49,7 @@ async function processFolderPath(folderPath, mainWindow: BrowserWindow) {
     const downloadLink = `https://drive.google.com/drive/folders/${uploadResultsMap.get(folderName)}`;
 
     main(downloadLink, folderName, mainWindow);
-    mainWindow.webContents.send('folder-processed', getFolderName(folderName));
+    mainWindow.webContents.send('folder-upload', getFolderName(folderName));
   } catch (error) {
     log.error(`Error processing folder '${folderPath}': `, error);
   }
