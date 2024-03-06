@@ -135,7 +135,6 @@ export async function handleFileUpload(filePath, files, folder) {
   try {
     const authClient = await authorize()
     const folderID = await createFolder(authClient, folder)
-    console.log('Files: ', files)
     for (const file of files) {
       await uploadBasic(authClient, filePath, file, folderID)
     }

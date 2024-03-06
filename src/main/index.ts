@@ -4,7 +4,7 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { run } from './fileUpload'
 import { setSettings } from "./settings"
-function createWindow(): void {
+function createWindow(): BrowserWindow {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 900,
@@ -35,11 +35,13 @@ function createWindow(): void {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
+
+  return mainWindow
 }
 
-async function get_files(): Promise<void> {
+async function get_files(mainWindow): Promise<void> {
   const folder = await dialog.showOpenDialog({ properties: ['openDirectory', 'multiSelections'] })
-  run(folder);
+  run(folder, mainWindow);
 }
 
 // This method will be called when Electron has finished
@@ -55,12 +57,12 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
+  let mainWindow = createWindow()
   // IPC test
-  ipcMain.on('ping', () => get_files())
+  ipcMain.on('ping', () => get_files(mainWindow))
   ipcMain.on('save-settings', (event, args) => {
     setSettings("anmeldedaten", args);
   })
-  createWindow()
 
   app.on('activate', function() {
     // On macOS it's common to re-create a window in the app when the

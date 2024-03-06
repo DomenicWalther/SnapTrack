@@ -9,6 +9,7 @@
   }
 
   const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
+  const ordner = ['Ordner 1', 'Ordner 2', 'Ordner 3', 'Ordner 4', 'Ordner 5']
 
   let emailAdress: String = ''
   let password: String = ''
@@ -17,6 +18,10 @@
     toggleModal()
     toast.success('Einstellungen gespeichert!')
   }
+
+  window.electronAPI.onfolderProcessed((value) => {
+    toast.success('Kindergarten verschickt!\n' + value)
+  })
 </script>
 
 <Toaster />
@@ -37,3 +42,20 @@
 <div class="settings">
   <button class="settings-button" on:click={toggleModal}><SettingsIcon /></button>
 </div>
+<div class="upload-status">
+  <p>Upload Status</p>
+  <p>Ordner hochgeladen: 1/{ordner.length}</p>
+  <p>Dateien hochgeladen: 1/5</p>
+</div>
+
+<style lang="scss">
+  .upload-status {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 10px;
+    p {
+      margin: 5px 0;
+    }
+  }
+</style>
