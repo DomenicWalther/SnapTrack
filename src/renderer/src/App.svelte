@@ -17,9 +17,14 @@
   let folderProcessed: number = 0
   let fileAmount: number = 0
   let fileProcessed: number = 0
+  let passwordField: HTMLInputElement
 
   let emailAdress: String = ''
   let password: String = ''
+
+  const togglePasswordVisibility = () => {
+    passwordField.type = passwordField.type === 'password' ? 'text' : 'password'
+  }
   const saveSettings = () => {
     window.electron.ipcRenderer.send('save-settings', { emailAdress, password })
     toggleModal()
@@ -63,7 +68,6 @@
   })
 
   window.electronAPI.onSettingsLoad((settings) => {
-    console.log(settings)
     emailAdress = settings.emailAdress
     password = settings.password
   })
@@ -81,7 +85,15 @@
 
 <Modal isOpen={showModal} close={toggleModal}>
   <input type="text" bind:value={emailAdress} placeholder="E-Mail Adresse" required />
-  <input type="password" bind:value={password} placeholder="Passwort" required />
+  <input
+    type="password"
+    bind:this={passwordField}
+    bind:value={password}
+    placeholder="Passwort"
+    required
+  />
+  <input type="checkbox" id="passwordVisible" on:click={togglePasswordVisibility} />
+  <label for="passwordVisible">Passwort anzeigen</label>
   <button class="save-button" on:click={saveSettings}>Speichern</button>
 </Modal>
 <div class="settings">
