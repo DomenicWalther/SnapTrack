@@ -1,4 +1,8 @@
 import { ElectronAPI } from '@electron-toolkit/preload'
+type settings = {
+  emailAdress: string,
+  password: string,
+}
 export interface IElectronAPI {
   onFolderUpload(callback: (value: string) => void): void
   onMailSent(callback: (value: string) => void): void
@@ -8,6 +12,7 @@ export interface IElectronAPI {
   onFileAmount(callback: (value: number) => void): void
   onFileProcessed(callback: (value: string) => void): void
   onFolderProcessed(callback: (value: string) => void): void
+  onSettingsLoad(callback: (value: settings) => void): void
 }
 
 declare global {

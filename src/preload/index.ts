@@ -19,7 +19,8 @@ if (process.contextIsolated) {
       onFolderAmount: (callback) => ipcRenderer.on('folder-amount', (_event, value) => callback(value)),
       onFileAmount: (callback) => ipcRenderer.on('file-amount', (_event, value) => callback(value)),
       onFileProcessed: (callback) => ipcRenderer.on('file-processed', (_event, value) => callback(value)),
-      onFolderProcessed: (callback) => ipcRenderer.on('folder-processed', (_event, value) => callback(value))
+      onFolderProcessed: (callback) => ipcRenderer.on('folder-processed', (_event, value) => callback(value)),
+      onSettingsLoad: (callback) => ipcRenderer.on('settings-load', (_event, value) => callback(value)),
     })
   } catch (error) {
     console.error(error)

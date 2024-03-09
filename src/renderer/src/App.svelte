@@ -5,6 +5,9 @@
   import Modal from './components/Modal.svelte'
   let showModal = false
   function toggleModal() {
+    if (!showModal) {
+      window.electron.ipcRenderer.send('load-settings')
+    }
     showModal = !showModal
   }
 
@@ -57,6 +60,12 @@
 
   window.electronAPI.onFolderProcessed(() => {
     folderProcessed += 1
+  })
+
+  window.electronAPI.onSettingsLoad((settings) => {
+    console.log(settings)
+    emailAdress = settings.emailAdress
+    password = settings.password
   })
 </script>
 
