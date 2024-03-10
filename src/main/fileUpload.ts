@@ -21,15 +21,22 @@ function getFolderName(filepath: String) {
 export async function run(folderPathResult: FileDialogResult, mainWindow: BrowserWindow) {
   mainWindow.webContents.send('set-uploading', true);
   mainWindow.webContents.send('folder-amount', folderPathResult.filePaths.length);
+
+
+  let anyFileProcessed = false;
   try {
     for (const folderPath of folderPathResult.filePaths) {
-      await processFolderPath(folderPath, mainWindow);
-      mainWindow.webContents.send('folder-processed');
+      const processed = await processFolderPath(folderPath, mainWindow);
+      if (processed) {
+        anyFileProcessed = true;
+        mainWindow.webContents.send('folder-processed');
+      }
     }
-    log.info("Upload complete");
+    log.info(anyFileProcessed ? "Upload complete" : "No files to upload");
     mainWindow.webContents.send('set-uploading', false);
   } catch (error) {
     log.error("Failed to process folder paths: ", error);
+    mainWindow.webContents.send('set-uploading', false);
   }
 }
 
@@ -40,18 +47,27 @@ async function processFolderPath(folderPath, mainWindow: BrowserWindow) {
 
     const files = await fs.readdir(folderPath);
     log.info(`Files: ${files}`);
+    // break if no Files
+    if (files.length === 0) {
+      return false;
+    }
 
     mainWindow.webContents.send('file-amount', files.length);
     const uploadResult = await handleFileUpload(folderPath, files, folderName, mainWindow);
     log.info(uploadResult);
 
     const uploadResultsMap = new Map().set(folderName, uploadResult);
+    if (uploadResultsMap.get(folderName) === undefined) {
+      return false;
+    }
     const downloadLink = `https://drive.google.com/drive/folders/${uploadResultsMap.get(folderName)}`;
 
     main(downloadLink, folderName, mainWindow);
     mainWindow.webContents.send('folder-upload', getFolderName(folderName));
+    return true;
   } catch (error) {
     log.error(`Error processing folder '${folderPath}': `, error);
+    return false
   }
 }
 
