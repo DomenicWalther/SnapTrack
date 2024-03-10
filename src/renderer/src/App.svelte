@@ -96,7 +96,10 @@
     />
     <input type="checkbox" id="passwordVisible" on:click={togglePasswordVisibility} />
     <label for="passwordVisible">Passwort anzeigen</label>
-    <textarea rows="20" cols="50" bind:value={emailText} class="resize-none" />
+    <div class="email-Text">
+      <textarea rows="20" cols="50" bind:value={emailText} class="resize-none" />
+      <p>Platzhalter für den Downloadlink muss EXAKT {'{'}download{'}'} sein</p>
+    </div>
     <div>
       <button class="save-button" on:click={saveSettings}>Speichern</button>
       <button class="save-button" on:click={toggleModal}>Schließen</button>
@@ -123,5 +126,10 @@
     p {
       margin: 5px 0;
     }
+  }
+
+  .email-Text {
+    display: flex;
+    flex-direction: column;
   }
 </style>
