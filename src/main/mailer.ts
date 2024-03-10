@@ -18,14 +18,14 @@ async function setMailSettings() {
         pass: userSettings.password
       }
     })
-    return { transporter: transporter, emailSender: userSettings.emailAdress }
+    return { transporter: transporter, emailSender: userSettings.emailAdress, emailText: userSettings.emailText }
   } catch (error) {
     throw (error)
   }
 }
 export async function main(downloadLink: string, emailReceiver: string, mainWindow: Electron.BrowserWindow) {
-  let { transporter, emailSender } = await setMailSettings()
-  transporter.sendMail(createMessage(downloadLink, emailReceiver, emailSender), function(error, info) {
+  let { transporter, emailSender, emailText } = await setMailSettings()
+  transporter.sendMail(createMessage(downloadLink, emailReceiver, emailSender, emailText), function(error, info) {
     if (error) {
       mainWindow.webContents.send('mail-error', error)
     } else {
@@ -34,12 +34,11 @@ export async function main(downloadLink: string, emailReceiver: string, mainWind
   })
 }
 
-function createMessage(downloadLink: string, emailReceiver: string, emailSender: string) {
+function createMessage(downloadLink: string, emailReceiver: string, emailSender: string, emailText: string) {
   return {
     from: emailSender,
     to: emailReceiver,
     subject: 'Kindergarten Downloadlink',
-    text: 'Anbei der Downloadlink für die Kindergartenbilder' + downloadLink,
-    html: '<p>Anbei der Downloadlink für die Kindergartenbilder</p>' + downloadLink
+    text: emailText.replace("{download}", downloadLink),
   }
 }

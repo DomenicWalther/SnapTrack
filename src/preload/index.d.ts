@@ -2,6 +2,7 @@ import { ElectronAPI } from '@electron-toolkit/preload'
 type settings = {
   emailAdress: string,
   password: string,
+  emailText: string
 }
 export interface IElectronAPI {
   onFolderUpload(callback: (value: string) => void): void

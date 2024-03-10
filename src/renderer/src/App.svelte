@@ -18,7 +18,7 @@
   let fileAmount: number = 0
   let fileProcessed: number = 0
   let passwordField: HTMLInputElement
-
+  let emailText: String = ''
   let emailAdress: String = ''
   let password: String = ''
 
@@ -26,7 +26,7 @@
     passwordField.type = passwordField.type === 'password' ? 'text' : 'password'
   }
   const saveSettings = () => {
-    window.electron.ipcRenderer.send('save-settings', { emailAdress, password })
+    window.electron.ipcRenderer.send('save-settings', { emailAdress, password, emailText })
     toggleModal()
     toast.success('Einstellungen gespeichert!')
   }
@@ -70,6 +70,7 @@
   window.electronAPI.onSettingsLoad((settings) => {
     emailAdress = settings.emailAdress
     password = settings.password
+    emailText = settings.emailText
   })
 </script>
 
@@ -84,17 +85,23 @@
 </div>
 
 <Modal isOpen={showModal} close={toggleModal}>
-  <input type="text" bind:value={emailAdress} placeholder="E-Mail Adresse" required />
-  <input
-    type="password"
-    bind:this={passwordField}
-    bind:value={password}
-    placeholder="Passwort"
-    required
-  />
-  <input type="checkbox" id="passwordVisible" on:click={togglePasswordVisibility} />
-  <label for="passwordVisible">Passwort anzeigen</label>
-  <button class="save-button" on:click={saveSettings}>Speichern</button>
+  <div>
+    <input type="text" bind:value={emailAdress} placeholder="E-Mail Adresse" required />
+    <input
+      type="password"
+      bind:this={passwordField}
+      bind:value={password}
+      placeholder="Passwort"
+      required
+    />
+    <input type="checkbox" id="passwordVisible" on:click={togglePasswordVisibility} />
+    <label for="passwordVisible">Passwort anzeigen</label>
+    <textarea rows="20" cols="50" bind:value={emailText} class="resize-none" />
+    <div>
+      <button class="save-button" on:click={saveSettings}>Speichern</button>
+      <button class="save-button" on:click={toggleModal}>Schließen</button>
+    </div>
+  </div>
 </Modal>
 <div class="settings">
   <button class="settings-button" on:click={toggleModal}><SettingsIcon /></button>
