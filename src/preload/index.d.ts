@@ -1,6 +1,6 @@
 import { ElectronAPI } from '@electron-toolkit/preload'
 type settings = {
-  emailAdress: string,
+  emailAddress: string,
   password: string,
   emailText: string
 }

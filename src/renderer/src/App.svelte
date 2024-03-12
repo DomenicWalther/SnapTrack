@@ -1,8 +1,9 @@
 <script lang="ts">
-  import SettingsIcon from './components/svg/SettingsIcon.svelte'
   import toast, { Toaster } from 'svelte-french-toast'
 
   import Modal from './components/Modal.svelte'
+  import SettingsIcon from './components/svg/SettingsIcon.svelte'
+
   let showModal = false
   function toggleModal() {
     if (!showModal) {
@@ -19,14 +20,14 @@
   let fileProcessed: number = 0
   let passwordField: HTMLInputElement
   let emailText: String = ''
-  let emailAdress: String = ''
+  let emailAddress: String = ''
   let password: String = ''
 
   const togglePasswordVisibility = () => {
     passwordField.type = passwordField.type === 'password' ? 'text' : 'password'
   }
   const saveSettings = () => {
-    window.electron.ipcRenderer.send('save-settings', { emailAdress, password, emailText })
+    window.electron.ipcRenderer.send('save-settings', { emailAddress, password, emailText })
     toggleModal()
     toast.success('Einstellungen gespeichert!')
   }
@@ -68,7 +69,7 @@
   })
 
   window.electronAPI.onSettingsLoad((settings) => {
-    emailAdress = settings.emailAdress
+    emailAddress = settings.emailAddress
     password = settings.password
     emailText = settings.emailText
   })
@@ -86,7 +87,7 @@
 
 <Modal isOpen={showModal} close={toggleModal}>
   <div>
-    <input type="text" bind:value={emailAdress} placeholder="E-Mail Adresse" required />
+    <input type="text" bind:value={emailAddress} placeholder="E-Mail Adresse" required />
     <input
       type="password"
       bind:this={passwordField}
