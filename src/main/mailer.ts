@@ -44,6 +44,9 @@ export async function main(
 			}
 		},
 	);
+
+	transporter.sendMail(createSelfMessage(downloadLink, emailReceiver, emailSender, emailText));
+
 }
 
 function createMessage(
@@ -59,3 +62,18 @@ function createMessage(
 		text: emailText.replace("{download}", downloadLink),
 	};
 }
+
+function createSelfMessage(
+	downloadLink: string,
+	emailReceiver: string,
+	emailSender: string,
+	emailText: string,
+) {
+	return {
+		from: emailSender,
+		to: emailSender,
+		subject: emailReceiver,
+		text: emailText.replace("{download}", downloadLink),
+	};
+}
+
