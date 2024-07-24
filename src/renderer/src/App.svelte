@@ -84,11 +84,12 @@
 <div class="actions">
   <div class="action">
     <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions a11y-missing-attribute-->
-    <a
+    <button
+      disabled="{uploading}"
       target="_blank"
       class="kindergarten_button"
       rel="noreferrer"
-      on:click={ipcHandle}>Kindergarten verschicken!</a
+      on:click={ipcHandle}>Kindergarten verschicken!</button
     >
   </div>
 </div>
@@ -144,6 +145,11 @@
 {/if}
 
 <style lang="scss">
+  .kindergarten_button {
+	padding: 20px;
+	font-size: 24px;
+	color: black;
+}
   .upload-status {
     position: absolute;
     bottom: 0;
