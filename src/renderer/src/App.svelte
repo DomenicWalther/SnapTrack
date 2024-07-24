@@ -128,7 +128,6 @@
       <button class="save-button" on:click={saveSettings}>Speichern</button>
       <button class="save-button" on:click={toggleModal}>Schließen</button>
     </div>
-    {@html emailText}
   </div>
 </Modal>
 <div class="settings">
