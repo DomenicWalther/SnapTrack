@@ -13,6 +13,7 @@
   }
 
   const ipcHandle = (): void => window.electron.ipcRenderer.send("ping");
+  const sendMassMails = (): void => console.log("sendMassMails");
   let uploading = false;
   let folderAmount = 0;
   let folderProcessed = 0;
@@ -92,6 +93,7 @@
       on:click={ipcHandle}>Kindergarten verschicken!</button
     >
   </div>
+  <button on:click={sendMassMails} class="kindergarten_button">Newsletter verschicken!</button>
 </div>
 
 <Modal isOpen={showModal} close={toggleModal}>

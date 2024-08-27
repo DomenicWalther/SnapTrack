@@ -28,8 +28,9 @@ async function setMailSettings() {
 		throw error;
 	}
 }
+
 export async function main(
-	downloadLink: string,
+	downloadLink: string | undefined,
 	emailReceiver: string,
 	mainWindow: Electron.BrowserWindow,
 ) {
@@ -46,11 +47,10 @@ export async function main(
 	);
 
 	transporter.sendMail(createSelfMessage(downloadLink, emailReceiver, emailSender, emailText));
-
 }
 
 function createMessage(
-	downloadLink: string,
+	downloadLink: string | undefined,
 	emailReceiver: string,
 	emailSender: string,
 	emailText: string,
@@ -59,12 +59,12 @@ function createMessage(
 		from: emailSender,
 		to: emailReceiver,
 		subject: "Kindergarten Downloadlink",
-		text: emailText.replace("{download}", downloadLink),
+		text: downloadLink ? emailText.replace("{download}", downloadLink) : emailText,
 	};
 }
 
 function createSelfMessage(
-	downloadLink: string,
+	downloadLink: string | undefined,
 	emailReceiver: string,
 	emailSender: string,
 	emailText: string,
@@ -73,7 +73,6 @@ function createSelfMessage(
 		from: emailSender,
 		to: emailSender,
 		subject: emailReceiver,
-		text: emailText.replace("{download}", downloadLink),
+		text: downloadLink ? emailText.replace("{download}", downloadLink) : emailText,
 	};
 }
-
