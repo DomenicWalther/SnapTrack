@@ -1,84 +1,83 @@
 <script lang="ts">
-  import toast, { Toaster } from "svelte-french-toast";
+import toast, { Toaster } from "svelte-french-toast";
 
-  import Modal from "./components/Modal.svelte";
-  import SettingsIcon from "./components/svg/SettingsIcon.svelte";
+import Modal from "./components/Modal.svelte";
+import SettingsIcon from "./components/svg/SettingsIcon.svelte";
 
-  let showModal = false;
-  function toggleModal() {
-    if (!showModal) {
-      window.electron.ipcRenderer.send("load-settings");
-    }
-    showModal = !showModal;
-  }
+let showModal = false;
+function toggleModal() {
+	if (!showModal) {
+		window.electron.ipcRenderer.send("load-settings");
+	}
+	showModal = !showModal;
+}
 
-  const ipcHandle = (): void => window.electron.ipcRenderer.send("ping");
-  const sendMassMails = (): void => console.log("sendMassMails");
-  let uploading = false;
-  let folderAmount = 0;
-  let folderProcessed = 0;
-  let fileAmount = 0;
-  let fileProcessed = 0;
-  let passwordField: HTMLInputElement;
-  let emailText = "";
-  let emailAddress = "";
-  let password = "";
+const ipcHandle = (): void => window.electron.ipcRenderer.send("ping");
+const sendMassMails = (): void => console.log("sendMassMails");
+let uploading = false;
+let folderAmount = 0;
+let folderProcessed = 0;
+let fileAmount = 0;
+let fileProcessed = 0;
+let passwordField: HTMLInputElement;
+let emailText = "";
+let emailAddress = "";
+let password = "";
 
-  const togglePasswordVisibility = () => {
-    passwordField.type =
-      passwordField.type === "password" ? "text" : "password";
-  };
-  const saveSettings = () => {
-    window.electron.ipcRenderer.send("save-settings", {
-      emailAddress,
-      password,
-      emailText,
-    });
-    toggleModal();
-    toast.success("Einstellungen gespeichert!");
-  };
+const togglePasswordVisibility = () => {
+	passwordField.type = passwordField.type === "password" ? "text" : "password";
+};
+const saveSettings = () => {
+	window.electron.ipcRenderer.send("save-settings", {
+		emailAddress,
+		password,
+		emailText,
+	});
+	toggleModal();
+	toast.success("Einstellungen gespeichert!");
+};
 
-  window.electronAPI.onFolderUpload((value) => {
-    toast.success(`Bilder erfolgreich hochgeladen\n${value}`);
-  });
+window.electronAPI.onFolderUpload((value) => {
+	toast.success(`Bilder erfolgreich hochgeladen\n${value}`);
+});
 
-  window.electronAPI.onMailSent((value) => {
-    toast.success(`E-Mail verschickt!\n${value}`);
-  });
+window.electronAPI.onMailSent((value) => {
+	toast.success(`E-Mail verschickt!\n${value}`);
+});
 
-  window.electronAPI.onMailError((value) => {
-    toast.error(`E-Mail konnte nicht verschickt werden!\n${value}`, {
-      duration: 6000,
-    });
-  });
+window.electronAPI.onMailError((value) => {
+	toast.error(`E-Mail konnte nicht verschickt werden!\n${value}`, {
+		duration: 6000,
+	});
+});
 
-  window.electronAPI.onSetUploading((value) => {
-    uploading = value;
-  });
+window.electronAPI.onSetUploading((value) => {
+	uploading = value;
+});
 
-  window.electronAPI.onFolderAmount((value) => {
-    folderProcessed = 0;
-    folderAmount = value;
-  });
+window.electronAPI.onFolderAmount((value) => {
+	folderProcessed = 0;
+	folderAmount = value;
+});
 
-  window.electronAPI.onFileAmount((value) => {
-    fileProcessed = 0;
-    fileAmount = value;
-  });
+window.electronAPI.onFileAmount((value) => {
+	fileProcessed = 0;
+	fileAmount = value;
+});
 
-  window.electronAPI.onFileProcessed(() => {
-    fileProcessed += 1;
-  });
+window.electronAPI.onFileProcessed(() => {
+	fileProcessed += 1;
+});
 
-  window.electronAPI.onFolderProcessed(() => {
-    folderProcessed += 1;
-  });
+window.electronAPI.onFolderProcessed(() => {
+	folderProcessed += 1;
+});
 
-  window.electronAPI.onSettingsLoad((settings) => {
-    emailAddress = settings.emailAddress;
-    password = settings.password;
-    emailText = settings.emailText;
-  });
+window.electronAPI.onSettingsLoad((settings) => {
+	emailAddress = settings.emailAddress;
+	password = settings.password;
+	emailText = settings.emailText;
+});
 </script>
 
 <Toaster />
@@ -87,9 +86,7 @@
     <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions a11y-missing-attribute-->
     <button
       disabled="{uploading}"
-      target="_blank"
       class="kindergarten_button"
-      rel="noreferrer"
       on:click={ipcHandle}>Kindergarten verschicken!</button
     >
   </div>
